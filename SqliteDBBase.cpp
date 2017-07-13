@@ -632,8 +632,24 @@ int CSqliteDBStmt::Attach(const CString& strDBPath,const CString& strDBName)
 {
 	CString strSQL;
 	// 附加数据库
-	strSQL.Format(_T("ATTACH '%s' AS \"%s\""),strDBPath,strDBName);
-	return Exec(strSQL);
+	strSQL.Format(_T("ATTACH :DBPath AS \"%s\""),strDBName);
+
+	int rc = Prepare(strSQL);
+	if (SQLITE_OK != rc)
+	{
+		// 准备语句失败
+		return rc;
+	}
+	Bind_Text(_T(":DBPath"),strDBPath);
+
+	// 执行SQL语句
+	rc = Step();
+
+	// 完成SQL语句
+	m_mapstrName2iCol.clear();
+	Finalize();
+
+	return rc;
 }
 int CSqliteDBStmt::Detach(const CString& strDBName)
 {
@@ -687,6 +703,7 @@ BOOL CSqliteDBStmt::IsTableExist(const CString& strTableName,const CString& strD
 	rc = Data_Count();
 
 	// 释放
+	m_mapstrName2iCol.clear();
 	Finalize();
 	if (0 == rc)
 	{
@@ -720,6 +737,7 @@ BOOL CSqliteDBStmt::IsViewExist(const CString& strTableName,const CString& strDb
 	rc = Data_Count();
 
 	// 释放
+	m_mapstrName2iCol.clear();
 	Finalize();
 	if (0 == rc)
 	{
@@ -753,6 +771,7 @@ BOOL CSqliteDBStmt::IsFieldExist(const CString& strTableName,const CString& strF
 		}
 		rc = Step();
 	}
+	m_mapstrName2iCol.clear();
 	Finalize();
 	return bExist;
 }
