@@ -658,7 +658,7 @@ int CSqliteDBStmt::Detach(const CString& strDBName)
 	strSQL.Format(_T("DETACH \"%s\""),strDBName);
 	return Exec(strSQL);
 }
-int CSqliteDBStmt::DropTable(const CString& strTableName,const CString& strDbName /*= _T("")*/)
+int CSqliteDBStmt::DropTable(const CString& strTableName,const CString& strDbName /*= _T("main")*/)
 {
 	CString strSQL;
 
