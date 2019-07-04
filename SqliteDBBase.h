@@ -121,8 +121,8 @@ public:
 	*  @author: yjc
 	*  @date  : 2016/5/17 10:16
 	*/
-	static void Result_int(void* ctx,int nValue);
-	static void Result_int64(void* ctx,__int64 nValue);
+	static void Result_Int(void* ctx,int nValue);
+	static void Result_Int64(void* ctx,__int64 nValue);
 	static void Result_Double(void* ctx,double dblValue);
 	static void Result_Text(void* ctx,const CString& strValue);
 	static void Result_Blob(void* ctx,const void* pBuffer,const int nByte);

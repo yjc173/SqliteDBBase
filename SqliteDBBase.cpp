@@ -55,47 +55,14 @@ int CSqliteDataBase::Open(const CString& strSqliteDBPath,sqlite3*& pDb)
 
 int CSqliteDataBase::Close()
 {
-	if (NULL == m_pDb)
-	{
-		return SQLITE_OK;
-	}
-
-	// 释放附加在连接上的语句
-	sqlite3_stmt* pStmt = sqlite3_next_stmt(m_pDb,NULL);
-	sqlite3_stmt* pStmtNext = NULL;
-	while (NULL != pStmt)
-	{
-		pStmtNext = sqlite3_next_stmt(m_pDb,pStmt);
-		sqlite3_finalize(pStmt);
-		pStmt = pStmtNext;
-	}
 	// 关闭数据库
-	int rc = sqlite3_close(m_pDb);
-	m_pDb = NULL;
-	return rc;
+	return sqlite3_close(m_pDb);
 }
 
 int CSqliteDataBase::Close(sqlite3* pDb)
 {
-	// 
-	if (NULL == pDb)
-	{
-		return SQLITE_OK;
-	}
-
-	// 释放附加在连接上的语句
-	sqlite3_stmt* pStmt = sqlite3_next_stmt(pDb,NULL);
-	sqlite3_stmt* pStmtNext = NULL;
-	while (NULL != pStmt)
-	{
-		pStmtNext = sqlite3_next_stmt(pDb,pStmt);
-		sqlite3_finalize(pStmt);
-		pStmt = pStmtNext;
-	}
 	// 关闭数据库
-	int rc = sqlite3_close(pDb);
-	pDb = NULL;
-	return rc;
+	return sqlite3_close(pDb);
 }
 int CSqliteDataBase::Create_function(const CString& strFunctionName,const int nArg,void (*pFunc)(void* ctx,int nArg,void** values),void *pApp /*= NULL*/)
 {
@@ -230,13 +197,13 @@ const void* CSqliteDataBase::Value_Blob(void* pValue)
 	return sqlite3_value_blob(static_cast<sqlite3_value*>(pValue));
 }
 
-void CSqliteDataBase::Result_int(void* ctx,int nValue)
+void CSqliteDataBase::Result_Int(void* ctx,int nValue)
 {
 	// 设置回调函数的返回值
 	return sqlite3_result_int(static_cast<sqlite3_context*>(ctx),nValue);
 }
 
-void CSqliteDataBase::Result_int64(void* ctx,__int64 nValue)
+void CSqliteDataBase::Result_Int64(void* ctx,__int64 nValue)
 {
 	// 设置回调函数的返回值
 	return sqlite3_result_int64(static_cast<sqlite3_context*>(ctx),nValue);
